@@ -513,6 +513,11 @@ function (_Component) {
     key: "render",
     value: function render() {
       var component = this.state.component;
+
+      if (typeof component === 'function') {
+        return component();
+      }
+
       return component;
     }
   }]);
