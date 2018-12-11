@@ -434,20 +434,20 @@ function (_Component) {
     _this = possibleConstructorReturn_default()(this, getPrototypeOf_default()(MediaQuery).call(this, props));
 
     defineProperty_default()(assertThisInitialized_default()(assertThisInitialized_default()(_this)), "state", {
-      component: null
+      matchQuery: null
     });
 
     defineProperty_default()(assertThisInitialized_default()(assertThisInitialized_default()(_this)), "cancellableListener", function (mql) {
       var queries = _this.props.queries;
 
       if (mql.matches) {
-        var _queries$filter$0$com = queries.filter(function (query) {
-          return query.query === mql.media;
-        })[0].component,
-            component = _queries$filter$0$com === void 0 ? null : _queries$filter$0$com;
+        var _queries$filter$0$que = queries.filter(function (q) {
+          return q.query === mql.media;
+        })[0].query,
+            query = _queries$filter$0$que === void 0 ? null : _queries$filter$0$que;
 
         _this.setState({
-          component: component
+          matchQuery: query
         });
       }
     });
@@ -512,13 +512,21 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var component = this.state.component;
+      var queries = this.props.queries;
+      var matchQuery = this.state.matchQuery;
+      var matched = queries.filter(function (query) {
+        return query.query === matchQuery;
+      })[0];
 
-      if (typeof component === 'function') {
-        return component();
+      if (matched && matched.component) {
+        if (typeof matched.component === 'function') {
+          return matched.component();
+        }
+
+        return matched.component;
       }
 
-      return component;
+      return null;
     }
   }]);
 

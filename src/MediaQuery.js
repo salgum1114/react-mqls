@@ -13,7 +13,7 @@ class MediaQuery extends Component {
     }
 
     state = {
-        component: null,
+        matchQuery: null,
     }
 
     componentDidMount() {
@@ -46,9 +46,9 @@ class MediaQuery extends Component {
     cancellableListener = (mql) => {
         const { queries } = this.props;
         if (mql.matches) {
-            const { component = null } = queries.filter(query => query.query === mql.media)[0];
+            const { query = null } = queries.filter(q => q.query === mql.media)[0];
             this.setState({
-                component,
+                matchQuery: query,
             });
         }
     }
@@ -64,11 +64,16 @@ class MediaQuery extends Component {
     }
 
     render() {
-        const { component } = this.state;
-        if (typeof component === 'function') {
-            return component();
+        const { queries } = this.props;
+        const { matchQuery } = this.state;
+        const matched = queries.filter(query => query.query === matchQuery)[0];
+        if (matched && matched.component) {
+            if (typeof matched.component === 'function') {
+                return matched.component();
+            }
+            return matched.component;
         }
-        return component;
+        return null;
     }
 }
 
