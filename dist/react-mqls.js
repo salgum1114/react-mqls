@@ -441,13 +441,12 @@ function (_Component) {
       var queries = _this.props.queries;
 
       if (mql.matches) {
-        var _queries$filter$0$que = queries.filter(function (q) {
+        var matched = queries.filter(function (q) {
           return q.query === mql.media;
-        })[0].query,
-            query = _queries$filter$0$que === void 0 ? null : _queries$filter$0$que;
+        })[0];
 
         _this.setState({
-          matchQuery: query
+          matchQuery: matched ? matched.query : null
         });
       }
     });

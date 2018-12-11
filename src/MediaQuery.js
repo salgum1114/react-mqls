@@ -46,9 +46,9 @@ class MediaQuery extends Component {
     cancellableListener = (mql) => {
         const { queries } = this.props;
         if (mql.matches) {
-            const { query = null } = queries.filter(q => q.query === mql.media)[0];
+            const matched = queries.filter(q => q.query === mql.media)[0];
             this.setState({
-                matchQuery: query,
+                matchQuery: matched ? matched.query : null,
             });
         }
     }

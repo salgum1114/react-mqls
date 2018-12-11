@@ -21,11 +21,11 @@ class Example extends Component {
             component: 'text',
         },
         {
-            query: '(max-width: 1199px)',
+            query: '(max-width: 1199px) and (min-width: 768px)',
             component: 'text1',
         },
         {
-            query: '(max-width: 1023px)',
+            query: '(max-width: 767px)',
             component: 'text2',
         },
     ]}>
