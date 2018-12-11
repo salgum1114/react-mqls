@@ -65,6 +65,9 @@ class MediaQuery extends Component {
 
     render() {
         const { component } = this.state;
+        if (typeof component === 'function') {
+            return component();
+        }
         return component;
     }
 }
