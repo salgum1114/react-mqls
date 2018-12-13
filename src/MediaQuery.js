@@ -50,10 +50,6 @@ class MediaQuery extends Component {
             this.setState({
                 matchQuery: matched ? matched.query : null,
             });
-        } else {
-            this.setState({
-                matchQuery: null,
-            });
         }
     }
 

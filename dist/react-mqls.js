@@ -448,10 +448,6 @@ function (_Component) {
         _this.setState({
           matchQuery: matched ? matched.query : null
         });
-      } else {
-        _this.setState({
-          matchQuery: null
-        });
       }
     });
 
