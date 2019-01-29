@@ -1,6 +1,6 @@
 {
   "name": "react-mqls",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Javascript media query match for React.js",
   "main": "index.js",
   "scripts": {

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDom from 'react-dom';
 
-import MediaQuery from '../index';
+import MediaQuery from '../';
 
 const rootElement = document.getElementById('root');
 ReactDom.render(
