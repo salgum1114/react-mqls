@@ -437,16 +437,14 @@ function (_Component) {
       matchQuery: null
     });
 
-    defineProperty_default()(assertThisInitialized_default()(assertThisInitialized_default()(_this)), "cancellableListener", function (mql) {
-      var queries = _this.props.queries;
-
+    defineProperty_default()(assertThisInitialized_default()(assertThisInitialized_default()(_this)), "cancellableListener", function (component, mql) {
       if (mql.matches) {
-        var matched = queries.filter(function (q) {
-          return q.query === mql.media;
-        })[0];
-
         _this.setState({
-          matchQuery: matched ? matched.query : null
+          matchQuery: {
+            component: component,
+            media: mql.media,
+            matches: mql.matches
+          }
         });
       }
     });
@@ -455,11 +453,8 @@ function (_Component) {
       var queries = _this.props.queries;
 
       if (Array.isArray(queries)) {
-        var mqls = queries.map(function (query) {
-          return query.query;
-        });
         mqls.forEach(function (mql) {
-          _this.mediaQueryList[mql].removeListener(_this.cancellableListener);
+          _this.mediaQueryList[mql.query].removeListener(_this.cancellableListener);
         });
       }
     });
@@ -488,15 +483,12 @@ function (_Component) {
       var queries = this.props.queries;
 
       if (Array.isArray(queries)) {
-        var mqls = queries.map(function (query) {
-          return query.query;
-        });
-        mqls.forEach(function (mql) {
-          _this2.mediaQueryList[mql] = targetWindow.matchMedia(mql);
+        queries.forEach(function (mql) {
+          _this2.mediaQueryList[mql.query] = targetWindow.matchMedia(mql.query);
 
-          _this2.cancellableListener(_this2.mediaQueryList[mql]);
+          _this2.cancellableListener(mql.component, _this2.mediaQueryList[mql.query]);
 
-          _this2.mediaQueryList[mql].addListener(_this2.cancellableListener);
+          _this2.mediaQueryList[mql.query].addListener(_this2.cancellableListener.bind(_this2, mql.component));
         });
       } else {
         console.error('Does not support type');
@@ -511,18 +503,14 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      var queries = this.props.queries;
       var matchQuery = this.state.matchQuery;
-      var matched = queries.filter(function (query) {
-        return query.query === matchQuery;
-      })[0];
 
-      if (matched && matched.component) {
-        if (typeof matched.component === 'function') {
-          return matched.component();
+      if (matchQuery && matchQuery.component) {
+        if (typeof matchQuery.component === 'function') {
+          return matchQuery.component();
         }
 
-        return matched.component;
+        return matchQuery.component;
       }
 
       return null;

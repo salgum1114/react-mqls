@@ -27,11 +27,10 @@ class MediaQuery extends Component {
         }
         const { queries } = this.props;
         if (Array.isArray(queries)) {
-            const mqls = queries.map(query => query.query);
-            mqls.forEach((mql) => {
-                this.mediaQueryList[mql] = targetWindow.matchMedia(mql);
-                this.cancellableListener(this.mediaQueryList[mql]);
-                this.mediaQueryList[mql].addListener(this.cancellableListener);
+            queries.forEach((mql) => {
+                this.mediaQueryList[mql.query] = targetWindow.matchMedia(mql.query);
+                this.cancellableListener(mql.component, this.mediaQueryList[mql.query]);
+                this.mediaQueryList[mql.query].addListener(this.cancellableListener.bind(this, mql.component));
             });
         } else {
             console.error('Does not support type');
@@ -43,12 +42,14 @@ class MediaQuery extends Component {
         this.cancel();
     }
 
-    cancellableListener = (mql) => {
-        const { queries } = this.props;
+    cancellableListener = (component, mql) => {
         if (mql.matches) {
-            const matched = queries.filter(q => q.query === mql.media)[0];
             this.setState({
-                matchQuery: matched ? matched.query : null,
+                matchQuery: {
+                    component,
+                    media: mql.media,
+                    matches: mql.matches,
+                },
             });
         }
     }
@@ -56,22 +57,19 @@ class MediaQuery extends Component {
     cancel = () => {
         const { queries } = this.props;
         if (Array.isArray(queries)) {
-            const mqls = queries.map(query => query.query);
             mqls.forEach((mql) => {
-                this.mediaQueryList[mql].removeListener(this.cancellableListener);
+                this.mediaQueryList[mql.query].removeListener(this.cancellableListener);
             });
         }
     }
 
     render() {
-        const { queries } = this.props;
         const { matchQuery } = this.state;
-        const matched = queries.filter(query => query.query === matchQuery)[0];
-        if (matched && matched.component) {
-            if (typeof matched.component === 'function') {
-                return matched.component();
+        if (matchQuery && matchQuery.component) {
+            if (typeof matchQuery.component === 'function') {
+                return matchQuery.component();
             }
-            return matched.component;
+            return matchQuery.component;
         }
         return null;
     }
