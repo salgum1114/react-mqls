@@ -453,7 +453,7 @@ function (_Component) {
       var queries = _this.props.queries;
 
       if (Array.isArray(queries)) {
-        mqls.forEach(function (mql) {
+        queries.forEach(function (mql) {
           _this.mediaQueryList[mql.query].removeListener(_this.cancellableListener);
         });
       }

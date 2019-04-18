@@ -57,7 +57,7 @@ class MediaQuery extends Component {
     cancel = () => {
         const { queries } = this.props;
         if (Array.isArray(queries)) {
-            mqls.forEach((mql) => {
+            queries.forEach((mql) => {
                 this.mediaQueryList[mql.query].removeListener(this.cancellableListener);
             });
         }
