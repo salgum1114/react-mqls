@@ -29,8 +29,8 @@ class MediaQuery extends Component {
         if (Array.isArray(queries)) {
             queries.forEach((mql) => {
                 this.mediaQueryList[mql.query] = targetWindow.matchMedia(mql.query);
-                this.cancellableListener(mql.component, this.mediaQueryList[mql.query]);
-                this.mediaQueryList[mql.query].addListener(this.cancellableListener.bind(this, mql.component));
+                this.cancellableListener(mql.query, this.mediaQueryList[mql.query]);
+                this.mediaQueryList[mql.query].addListener(this.cancellableListener.bind(this, mql.query));
             });
         } else {
             console.error('Does not support type');
@@ -42,14 +42,12 @@ class MediaQuery extends Component {
         this.cancel();
     }
 
-    cancellableListener = (component, mql) => {
+    cancellableListener = (originQuery, mql) => {
+        const { queries } = this.props;
         if (mql.matches) {
+            const matched = queries.filter(q => q.query === originQuery)[0];
             this.setState({
-                matchQuery: {
-                    component,
-                    media: mql.media,
-                    matches: mql.matches,
-                },
+                matchQuery: matched ? matched.query : null,
             });
         }
     }
@@ -64,12 +62,14 @@ class MediaQuery extends Component {
     }
 
     render() {
+        const { queries } = this.props;
         const { matchQuery } = this.state;
-        if (matchQuery && matchQuery.component) {
-            if (typeof matchQuery.component === 'function') {
-                return matchQuery.component();
+        const matched = queries.filter(query => query.query === matchQuery)[0];
+        if (matched && matched.component) {
+            if (typeof matched.component === 'function') {
+                return matched.component();
             }
-            return matchQuery.component;
+            return matched.component;
         }
         return null;
     }

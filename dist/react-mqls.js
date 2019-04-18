@@ -437,14 +437,16 @@ function (_Component) {
       matchQuery: null
     });
 
-    defineProperty_default()(assertThisInitialized_default()(assertThisInitialized_default()(_this)), "cancellableListener", function (component, mql) {
+    defineProperty_default()(assertThisInitialized_default()(assertThisInitialized_default()(_this)), "cancellableListener", function (originQuery, mql) {
+      var queries = _this.props.queries;
+
       if (mql.matches) {
+        var matched = queries.filter(function (q) {
+          return q.query === originQuery;
+        })[0];
+
         _this.setState({
-          matchQuery: {
-            component: component,
-            media: mql.media,
-            matches: mql.matches
-          }
+          matchQuery: matched ? matched.query : null
         });
       }
     });
@@ -486,9 +488,9 @@ function (_Component) {
         queries.forEach(function (mql) {
           _this2.mediaQueryList[mql.query] = targetWindow.matchMedia(mql.query);
 
-          _this2.cancellableListener(mql.component, _this2.mediaQueryList[mql.query]);
+          _this2.cancellableListener(mql.query, _this2.mediaQueryList[mql.query]);
 
-          _this2.mediaQueryList[mql.query].addListener(_this2.cancellableListener.bind(_this2, mql.component));
+          _this2.mediaQueryList[mql.query].addListener(_this2.cancellableListener.bind(_this2, mql.query));
         });
       } else {
         console.error('Does not support type');
@@ -503,14 +505,18 @@ function (_Component) {
   }, {
     key: "render",
     value: function render() {
+      var queries = this.props.queries;
       var matchQuery = this.state.matchQuery;
+      var matched = queries.filter(function (query) {
+        return query.query === matchQuery;
+      })[0];
 
-      if (matchQuery && matchQuery.component) {
-        if (typeof matchQuery.component === 'function') {
-          return matchQuery.component();
+      if (matched && matched.component) {
+        if (typeof matched.component === 'function') {
+          return matched.component();
         }
 
-        return matchQuery.component;
+        return matched.component;
       }
 
       return null;
