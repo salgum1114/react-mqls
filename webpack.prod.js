@@ -27,13 +27,14 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(js|jsx|tsx|ts)$/,
                 loader: 'babel-loader?cacheDirectory',
                 include: path.resolve(__dirname, 'src'),
                 options: {
                     presets: [
-                        '@babel/env',
+                        ['@babel/preset-env', { modules: false }],
                         '@babel/preset-react',
+                        '@babel/preset-typescript',
                     ],
                     plugins: [
                         '@babel/plugin-transform-runtime',
@@ -73,8 +74,8 @@ module.exports = {
         ],
     },
     entry: {
-        [pkg.name]: path.resolve(__dirname, 'src/index.js'),
-        [`${pkg.name}.min`]: path.resolve(__dirname, 'src/index.js'),
+        [pkg.name]: path.resolve(__dirname, 'src/components/index.tsx'),
+        [`${pkg.name}.min`]: path.resolve(__dirname, 'src/components/index.tsx'),
     },
     output: {
         path: path.resolve(__dirname, 'dist'),

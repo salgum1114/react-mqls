@@ -11,13 +11,14 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.js$/,
+                test: /\.(js|jsx|tsx|ts)$/,
                 loader: 'babel-loader?cacheDirectory',
-                include: path.resolve(__dirname, 'examples'),
+                include: path.resolve(__dirname, 'src'),
                 options: {
                     presets: [
-                        '@babel/env',
+                        ['@babel/preset-env', { modules: false }],
                         '@babel/preset-react',
+                        '@babel/preset-typescript',
                     ],
                     plugins: [
                         '@babel/plugin-transform-runtime',
@@ -31,6 +32,10 @@ module.exports = {
                     ],
                 },
                 exclude: /node_modules/,
+            },
+            {
+                test: /\.(css|less)$/,
+                use: ['style-loader', 'css-loader', 'less-loader'],
             },
         ],
     },
@@ -48,16 +53,15 @@ module.exports = {
         noEmitOnErrors: true,
     },
     resolve: {
-        alias: {
-            'ag-grid-root': path.resolve(__dirname, '/node_modules/ag-grid'),
-        },
+        // Add `.ts` and `.tsx` as a resolvable extension.
+        extensions: ['.ts', '.tsx', '.js', 'jsx'],
     },
     entry: {
         bundle: [
             '@babel/polyfill',
             `webpack-dev-server/client?http://${host}:${devPort}`,
             'webpack/hot/only-dev-server',
-            path.resolve(__dirname, 'examples/index.js'),
+            path.resolve(__dirname, 'src/index.tsx'),
         ],
     },
     output: {
@@ -84,7 +88,6 @@ module.exports = {
         new webpack.HotModuleReplacementPlugin(), // HMR을 사용하기 위한 플러그인
         new HtmlWebpackPlugin({
             filename: 'index.html',
-            template: `${__dirname}/examples/index.html`,
         }),
     ],
 };
