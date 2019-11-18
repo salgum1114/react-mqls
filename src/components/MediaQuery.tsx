@@ -16,7 +16,6 @@ export interface MediaQueryProps {
 }
 
 interface IState {
-    matched?: React.ReactNode;
     matchedQuery: string[];
 }
 
@@ -96,16 +95,12 @@ class MediaQuery extends Component<MediaQueryProps, IState> {
     cancellableListener = (originQuery: string, mql: MediaQueryListEvent | MediaQueryList) => {
         if (mql.matches) {
             const matchedQuery = this.state.matchedQuery.concat(originQuery);
-            const matched = this.getMatched(originQuery);
             this.setState({
-                matched: matched ? matched.component : null,
                 matchedQuery,
             });
         } else {
             const matchedQuery = pull(this.state.matchedQuery, originQuery);
-            const matched = this.getMatched(matchedQuery[matchedQuery.length - 1]);
             this.setState({
-                matched: matched ? matched.component : null,
                 matchedQuery,
             })
         }
@@ -121,12 +116,13 @@ class MediaQuery extends Component<MediaQueryProps, IState> {
     }
 
     render() {
-        const { matched } = this.state;
+        const { matchedQuery } = this.state;
+        const matched = this.getMatched(matchedQuery[matchedQuery.length - 1]);
         if (matched) {
-            if (typeof matched === 'function') {
-                return matched();
+            if (typeof matched.component === 'function') {
+                return matched.component();
             }
-            return matched;
+            return matched.component;
         }
         return null;
     }

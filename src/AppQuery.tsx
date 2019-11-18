@@ -4,6 +4,9 @@ import MediaQuery from './components';
 import './app.less';
 
 class AppQuery extends Component {
+    getRandomData = () => {
+        return Math.random() * 40;
+    }
     render() {
         return (
             <MediaQuery
@@ -18,7 +21,7 @@ class AppQuery extends Component {
                     },
                     {
                         preset: 'xl',
-                        component: 'text3',
+                        component: () => `test3 ${this.getRandomData()}`,
                     },
                 ]}
             />
