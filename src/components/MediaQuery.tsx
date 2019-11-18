@@ -37,7 +37,6 @@ class MediaQuery extends Component<MediaQueryProps, IState> {
     }
 
     state: IState = {
-        matched: null,
         matchedQuery: this.props.queries.reduce((prev, curr) => {
             return prev.concat(curr.query || queryPreset[curr.preset]);
         }, []),
