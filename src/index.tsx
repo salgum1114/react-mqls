@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './App';
+import AppQuery from './AppQuery';
+import AppCSS from './AppCSS';
 
 const rootElement = document.createElement('div');
 rootElement.id = 'root';
@@ -9,14 +10,14 @@ document.body.appendChild(rootElement);
 
 const render = () => {
     ReactDOM.render(
-        <App />,
+        <AppQuery />,
         rootElement,
     );
 }
 
 render();
 if (module.hot) {
-    module.hot.accept('./App', () => {
+    module.hot.accept('./AppQuery', () => {
         render();
     });
 }

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import pull from 'lodash/pull';
 
 export type QueryPreset = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
@@ -16,7 +17,7 @@ export interface MediaQueryProps {
 
 interface IState {
     matched?: React.ReactNode;
-    matchedQuery: { [key: string]: boolean };
+    matchedQuery: string[];
 }
 
 const queryPreset: { [preset in QueryPreset]?: string } = {
@@ -39,8 +40,8 @@ class MediaQuery extends Component<MediaQueryProps, IState> {
     state: IState = {
         matched: null,
         matchedQuery: this.props.queries.reduce((prev, curr) => {
-            return Object.assign(prev, { [curr.query || curr.preset]: false });
-        }, {}),
+            return prev.concat(curr.query || queryPreset[curr.preset]);
+        }, []),
     }
 
     componentDidMount() {
@@ -77,23 +78,36 @@ class MediaQuery extends Component<MediaQueryProps, IState> {
         this.cancel();
     }
 
-    cancellableListener = (originQuery: string, mql: MediaQueryListEvent | MediaQueryList) => {
+    getMatched = (targetQuery: string) => {
         const { queries } = this.props;
-        console.log(mql.media, mql.matches);
+        if (typeof targetQuery === 'undefined') {
+            return null;
+        }
+        return queries.filter(q => {
+            if (q.query === targetQuery) {
+                return true;
+            } else if (queryPreset[q.preset] === targetQuery) {
+                return true;
+            }
+            return false;
+        })[0];
+    }
+
+    cancellableListener = (originQuery: string, mql: MediaQueryListEvent | MediaQueryList) => {
         if (mql.matches) {
-            const matched = queries.filter(q => {
-                console.log(q.query, originQuery);
-                if (q.query === originQuery) {
-                    return true;
-                } else if (queryPreset[q.preset] === originQuery) {
-                    return true;
-                }
-                return false;
-            })[0];
-            console.log(matched);
+            const matchedQuery = this.state.matchedQuery.concat(originQuery);
+            const matched = this.getMatched(originQuery);
             this.setState({
                 matched: matched ? matched.component : null,
+                matchedQuery,
             });
+        } else {
+            const matchedQuery = pull(this.state.matchedQuery, originQuery);
+            const matched = this.getMatched(matchedQuery[matchedQuery.length - 1]);
+            this.setState({
+                matched: matched ? matched.component : null,
+                matchedQuery,
+            })
         }
     }
 

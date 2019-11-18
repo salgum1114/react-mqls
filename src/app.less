@@ -8,3 +8,29 @@ html, body, #root {
     width: 100%;
     overflow: hidden;
 }
+
+.panel {
+    height: 100%;
+    background-color: indigo;
+}
+
+@media (min-width: 576px) {
+    .panel {
+        width: 100%;
+        background-color: red;
+    }
+}
+
+@media (min-width: 768px) {
+    .panel {
+        width: 50%;
+        background-color: blue;
+    }
+}
+
+@media (min-width: 1200px) {
+    .panel {
+        width: 25%;
+        background-color: green;
+    }
+}

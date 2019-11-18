@@ -1,27 +1,18 @@
 const webpack = require('webpack');
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const del = require('del');
 const pkg = require('./package.json');
 
-const pathsToClean = [
-    '',
-];
-const cleanOptions = {
-    root: path.resolve(__dirname, 'dist'),
-    verbose: true,
-};
-const isClean = process.argv.length > 5;
+del.sync(['dist/**', 'lib/**']);
+console.log('Deleted dist, lib folders');
+
 const plugins = [
     // 로더들에게 옵션을 넣어주는 플러그인
     new webpack.LoaderOptionsPlugin({
         minimize: true,
     }),
 ];
-if (isClean) {
-    // Build시 chunk 파일 삭제
-    plugins.push(new CleanWebpackPlugin(pathsToClean, cleanOptions));
-}
 module.exports = {
     mode: 'production',
     module: {
@@ -72,6 +63,10 @@ module.exports = {
                 sourceMap: true,
             }),
         ],
+    },
+    resolve: {
+        // Add `.ts` and `.tsx` as a resolvable extension.
+        extensions: ['.ts', '.tsx', '.js', 'jsx'],
     },
     entry: {
         [pkg.name]: path.resolve(__dirname, 'src/components/index.tsx'),

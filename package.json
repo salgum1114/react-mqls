@@ -1,12 +1,16 @@
 {
   "name": "react-mqls",
-  "version": "1.0.0",
+  "version": "1.1.1",
   "description": "Javascript media query match for React.js",
   "main": "dist/react-mqls.min.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "dist",
+    "lib"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "clean": "webpack -p --config webpack.prod.js --clean",
-    "build": "npm run tsc && npm run build:lib",
+    "build": "npm run build:lib && npm run tsc",
     "build:lib": "webpack -p --config webpack.prod.js",
     "start": "npm install && npm run start:dev",
     "start:dev": "webpack-dev-server --config webpack.dev.js --inline",
@@ -33,7 +37,14 @@
     "url": "https://github.com/salgum1114/react-mqls/issues"
   },
   "homepage": "https://github.com/salgum1114/react-mqls#readme",
+  "peerDependencies": {
+    "lodash": "^4.17.15",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-dom-factories": "^1.0.2"
+  },
   "dependencies": {
+    "lodash": "^4.17.15",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-design-editor": "0.0.4",
@@ -52,6 +63,7 @@
     "@babel/preset-env": "^7.7.1",
     "@babel/preset-react": "^7.7.0",
     "@babel/preset-typescript": "^7.7.2",
+    "@types/lodash": "^4.14.148",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",
     "antd-theme-webpack-plugin": "^1.3.0",
@@ -59,8 +71,8 @@
     "babel-loader": "^8.0.6",
     "babel-plugin-dynamic-import-webpack": "^1.1.0",
     "babel-plugin-import": "^1.12.2",
-    "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^3.2.0",
+    "del": "^5.1.0",
     "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-loader": "^3.0.2",
@@ -81,6 +93,5 @@
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0",
     "webpack-merge": "^4.2.2"
-  },
-  "types": "lib/index.d.ts"
+  }
 }
