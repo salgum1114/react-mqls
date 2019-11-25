@@ -109,7 +109,9 @@ class MediaQuery extends Component<MediaQueryProps, IState> {
         const { queries } = this.props;
         if (Array.isArray(queries)) {
             queries.forEach((mql) => {
-                this.mediaQueryList[mql.query].removeListener(this.cancellableListener);
+                if (this.mediaQueryList[mql.query]) {
+                    this.mediaQueryList[mql.query].removeListener(this.cancellableListener);
+                }
             });
         }
     }
